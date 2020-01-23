@@ -38,7 +38,7 @@ float   control_xRotation = 0;
 PVector control_boxSize = new PVector(1,1,1);
 PVector control_viewCentre = new PVector(1,1,1);
 float   control_gridFrequency = 1;
-
+PVector control_centre2D = new PVector(0,0,0);
 
 
 
@@ -97,7 +97,7 @@ void draw() {
  
  
  
-  background(255);
+  background(64);
   
   
   fill(34);
