@@ -91,6 +91,7 @@ void createGUI(){
   control_projectionMode.setColorLabels(color(0));
   control_projectionMode.setItemHeight(sliderHeight);
   control_projectionMode.setItemWidth(sliderHeight);
+  control_projectionMode.activate(0);
    
   println ("added sliders ok");
 }

@@ -1,6 +1,4 @@
-import g4p_controls.*; //<>//
-
-/*
+/* //<>//
 Copyright 2019 Studio RGL LLP
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -10,18 +8,6 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// We don't require you to credit us, but if you use it in your work feel free to point people to our twitter
-// https://twitter.com/RealGoodLiars
-// https://www.instagram.com/realgoodliars/
-
-// usage:
-// 1) run the program (tested using Processing 3.5, you can compile and run standalone if u want)
-// 2) pick a file location
-// 3) move the mouse to get the grid you want
-// 4) click to save a pdf
-// 5) done I guess, make some cool animation!
-
-//import g4p_controls.*;
 import controlP5.*;  // switched to a different GUI library
 import processing.pdf.*;
 
@@ -64,14 +50,6 @@ void draw() {
   clear();
 
   // Read GUI
-  // control_yRotation = radians(slider_yRotation.getValueF());//slider_control_yRotation;//radians(180+360*mouseX/width); //radians(frameCount*10-1);//radians(45);//radians(frameCount-1);
-  // control_xRotation = radians(slider_xRotation.getValueF());
-  // control_boxSize = new PVector (slider_scale_X.getValueF(), slider_scale_Y.getValueF(), slider_scale_Z.getValueF());
-  // control_viewCentre = new PVector (-slider_XZ.getValueXF(), -slider_height.getValueF(), slider_XZ.getValueYF());
-  // control_viewCentre = new PVector(control_viewCentre.x * control_boxSize.x, control_viewCentre.y * control_boxSize.y, control_viewCentre.z * control_boxSize.z); 
-  // control_gridFrequency = slider_gridFrequency.getValueF();
-  // control_curvePrecision = slider_curvePrecision.getValueI();
- 
   control_boxSize = new PVector(control_xBoxSize, control_yBoxSize, control_zBoxSize);
   float vx = -control_centre2D.getArrayValue()[0] * 0.5 * control_xBoxSize;
   float vy =  control_height * 0.5 * control_yBoxSize;
