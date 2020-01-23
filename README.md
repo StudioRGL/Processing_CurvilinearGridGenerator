@@ -15,5 +15,5 @@ Usage:
 
 Built using Processing & G4P by Peter Lager  
 www.processing.org  
-http://www.lagers.org.uk/g4p/  
+www.lagers.org.uk/g4p
 
