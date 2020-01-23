@@ -1,5 +1,3 @@
-import g4p_controls.*; //<>//
-
 /*
 Copyright 2019 Studio RGL LLP
 
@@ -14,6 +12,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 // https://twitter.com/RealGoodLiars
 // https://www.instagram.com/realgoodliars/
 
+// animation curvilinear grid generator
+// works over here, if u got bugs, sorry, ask a real programmer cos we just hacked this together :-)
+// hope it helps tho!
+
 // usage:
 // 1) run the program (tested using Processing 3.5, you can compile and run standalone if u want)
 // 2) pick a file location
@@ -27,7 +29,7 @@ import g4p_controls.*;
 import processing.pdf.*;
 
 // control values
-int control_curvePrecision = 64;
+int control_curvePrecision = 48;
 int control_projectionMode = 0;
 
 float   control_yRotation;
@@ -45,8 +47,7 @@ boolean saving = false;
 
 void setup() {
   
-  size(1600, 1600);  //this just runs the program in interactive mode
-  strokeWeight(0.5);
+  size(1200, 1200);  //this just runs the program in interactive mode
   loop();
 
   createGUI();
