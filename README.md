@@ -13,7 +13,7 @@ Usage:
  2) Pick a file location
  5) Make some cool animation!
 
-Built using Processing & G4P by Peter Lager  
+Built using Processing & ControlP5 by Andreas Schlegel
 www.processing.org  
-www.lagers.org.uk/g4p
+www.sojamo.de/libraries/controlP5
 
