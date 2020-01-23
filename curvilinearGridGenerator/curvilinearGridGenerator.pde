@@ -38,9 +38,11 @@ float   control_xRotation = 0;
 PVector control_boxSize = new PVector(1,1,1);
 PVector control_viewCentre = new PVector(1,1,1);
 float   control_gridFrequency = 1;
-PVector control_centre2D = new PVector(0,0,0);
-
-
+float   control_xBoxSize = 1.0;
+float   control_yBoxSize = 1.0;
+float   control_zBoxSize = 1.0;
+float   control_height = 1.0;
+Slider2D control_centre2D;
 
 File pdfPath;
 boolean waitingToSave = false;
@@ -50,6 +52,7 @@ void setup() {
   
   size(1600, 1600);  //this just runs the program in interactive mode
   strokeWeight(0.5);
+  smooth();
   loop();
  
   createGUI();
@@ -67,8 +70,9 @@ void draw() {
   // control_viewCentre = new PVector(control_viewCentre.x * control_boxSize.x, control_viewCentre.y * control_boxSize.y, control_viewCentre.z * control_boxSize.z); 
   // control_gridFrequency = slider_gridFrequency.getValueF();
   // control_curvePrecision = slider_curvePrecision.getValueI();
-  
-  
+ 
+  control_boxSize = new PVector(control_xBoxSize, control_yBoxSize, control_zBoxSize);
+  control_viewCentre = new PVector(-control_centre2D.getArrayValue()[0] * control_xBoxSize, control_height * control_yBoxSize, -control_centre2D.getArrayValue()[1] * control_zBoxSize); 
   
   
   String pdfLocation = "";
@@ -97,7 +101,7 @@ void draw() {
  
  
  
-  background(64);
+  background(255);
   
   
   fill(34);
@@ -112,18 +116,18 @@ void draw() {
    PVector x = new PVector(1,0,0);
    PVector y = new PVector(0,1,0);
    PVector z = new PVector(0,0,1);
-   PVector transformedViewCentre = new PVector(1,1,1);//control_viewCentre.copy();
+   PVector transformedViewCentre = control_viewCentre.copy();
    
-   x = rotateAroundY(x, control_yRotation);
-   y = rotateAroundY(y, control_yRotation); // superfluous really?
-   z = rotateAroundY(z, control_yRotation);
-   transformedViewCentre = rotateAroundY(transformedViewCentre, control_yRotation);
+   x = rotateAroundY(x, radians(control_yRotation));
+   y = rotateAroundY(y, radians(control_yRotation)); // superfluous really?
+   z = rotateAroundY(z, radians(control_yRotation));
+   transformedViewCentre = rotateAroundY(transformedViewCentre, radians(control_yRotation));
    
    //println("x rotation = " + control_xRotation);
-   x = rotateAroundX(x, control_xRotation);
-   y = rotateAroundX(y, control_xRotation);
-   z = rotateAroundX(z, control_xRotation);
-   transformedViewCentre = rotateAroundX(transformedViewCentre, control_xRotation);
+   x = rotateAroundX(x, radians(control_xRotation));
+   y = rotateAroundX(y, radians(control_xRotation));
+   z = rotateAroundX(z, radians(control_xRotation));
+   transformedViewCentre = rotateAroundX(transformedViewCentre, radians(control_xRotation));
      
    
   //direction,  perpendicular,  centre,  width,  length, int nLines)
