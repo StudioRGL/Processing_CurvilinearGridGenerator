@@ -28,7 +28,7 @@ import processing.pdf.*;
 
 // control values
 int control_curvePrecision = 64;
-int control_projectionMode = 0;
+//int control_projectionMode = 0;
 
 ControlP5 cp5;
 ControlWindow controlWindow;
@@ -36,13 +36,14 @@ ControlWindow controlWindow;
 float   control_yRotation = 0;
 float   control_xRotation = 0;
 PVector control_boxSize = new PVector(1,1,1);
-PVector control_viewCentre = new PVector(1,1,1);
-float   control_gridFrequency = 1;
+PVector control_viewCentre = new PVector(0,0,0);
+float   control_gridFrequency = 16;
 float   control_xBoxSize = 1.0;
 float   control_yBoxSize = 1.0;
 float   control_zBoxSize = 1.0;
-float   control_height = 1.0;
+float   control_height = 0.0;
 Slider2D control_centre2D;
+RadioButton control_projectionMode;
 
 File pdfPath;
 boolean waitingToSave = false;
@@ -72,7 +73,14 @@ void draw() {
   // control_curvePrecision = slider_curvePrecision.getValueI();
  
   control_boxSize = new PVector(control_xBoxSize, control_yBoxSize, control_zBoxSize);
-  control_viewCentre = new PVector(-control_centre2D.getArrayValue()[0] * control_xBoxSize, control_height * control_yBoxSize, -control_centre2D.getArrayValue()[1] * control_zBoxSize); 
+  float vx = -control_centre2D.getArrayValue()[0] * 0.5 * control_xBoxSize;
+  float vy =  control_height * 0.5 * control_yBoxSize;
+  float vz = control_centre2D.getArrayValue()[1] * control_zBoxSize;
+  float snap = 0.01;
+  vx = round(vx/snap)*snap;
+  vy = round(vy/snap)*snap;
+  vz = round(vz/snap)*snap;
+  control_viewCentre = new PVector(vx,vy, vz); 
   
   
   String pdfLocation = "";
@@ -345,12 +353,12 @@ PVector getCoordinates(float x, float y, float z){
   
   
   // hemispheric polar
-  if (control_projectionMode == 0)
+  if (control_projectionMode.getValue() == 0)
   {
     alpha = 0.5*width*x/(sqrt(x*x + y*y + z*z));
     beta = 0.5*width*y/(sqrt(x*x + y*y + z*z));
   }
-  else if (control_projectionMode == 1)
+  else if (control_projectionMode.getValue() == 1)
   {
     // cylindrical
     alpha = atan2(x,z)*width   *0.25;
@@ -384,10 +392,10 @@ void fileSelected(File selection) {
 // just gets all the data
 String getDataString()
 {
-  String answer = "Studio RGL Curvilinear Grid Generator v0.22";
+  String answer = "Studio RGL Curvilinear Grid Generator v1.0";
   answer += "\nwww.twitter.com/RealGoodLiars";
   answer += "\nwww.instagram.com/RealGoodLiars";
-  answer += "\nBuilt with Processing and G4P GUI";
+  answer += "\nBuilt with Processing and ControlP5 GUI";
   answer += "\nBox Scale: " + control_boxSize;
   answer += "\nView Centre: " + control_viewCentre;
   answer += "\nRotation XY: " + control_xRotation + ", " + control_yRotation;
