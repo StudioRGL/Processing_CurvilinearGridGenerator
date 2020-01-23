@@ -1,5 +1,5 @@
-# Processing_CurvilinearGridGenerator
-## A Curvilinear Grid Generator for 2D Animation
+# Curvilinear Grid Generator
+## A grid generator for 2D animation, built with Processing & ControlP5
 
 This was originally built as an in-house tool by Studio RGL in London. We don't require you to credit us, but if you use this in your work feel free to point people to our Twitter, we'd love to see what you get up to!
 
@@ -13,7 +13,7 @@ Usage:
  2) Pick a file location
  5) Make some cool animation!
 
-Built using Processing & G4P by Peter Lager  
+Built using Processing & ControlP5 by Andreas Schlegel  
 www.processing.org  
-www.lagers.org.uk/g4p
+www.sojamo.de/libraries/controlP5
 
