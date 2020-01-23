@@ -21,20 +21,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 // 4) click to save a pdf
 // 5) done I guess, make some cool animation!
 
-
-
-import g4p_controls.*;
+//import g4p_controls.*;
+import controlP5.*;  // switched to a different GUI library
 import processing.pdf.*;
+
 
 // control values
 int control_curvePrecision = 64;
 int control_projectionMode = 0;
 
-float   control_yRotation;
-float   control_xRotation;
-PVector control_boxSize;
-PVector control_viewCentre;
-float   control_gridFrequency;
+ControlP5 cp5;
+ControlWindow controlWindow;
+
+float   control_yRotation = 0;
+float   control_xRotation = 0;
+PVector control_boxSize = new PVector(1,1,1);
+PVector control_viewCentre = new PVector(1,1,1);
+float   control_gridFrequency = 1;
 
 
 
@@ -48,7 +51,7 @@ void setup() {
   size(1600, 1600);  //this just runs the program in interactive mode
   strokeWeight(0.5);
   loop();
-
+ 
   createGUI();
 }
 
@@ -57,13 +60,13 @@ void draw() {
   clear();
 
   // Read GUI
-  control_yRotation = radians(slider_yRotation.getValueF());//slider_control_yRotation;//radians(180+360*mouseX/width); //radians(frameCount*10-1);//radians(45);//radians(frameCount-1);
-  control_xRotation = radians(slider_xRotation.getValueF());
-  control_boxSize = new PVector (slider_scale_X.getValueF(), slider_scale_Y.getValueF(), slider_scale_Z.getValueF());
-  control_viewCentre = new PVector (-slider_XZ.getValueXF(), -slider_height.getValueF(), slider_XZ.getValueYF());
-  control_viewCentre = new PVector(control_viewCentre.x * control_boxSize.x, control_viewCentre.y * control_boxSize.y, control_viewCentre.z * control_boxSize.z); 
-  control_gridFrequency = slider_gridFrequency.getValueF();
-  control_curvePrecision = slider_curvePrecision.getValueI();
+  // control_yRotation = radians(slider_yRotation.getValueF());//slider_control_yRotation;//radians(180+360*mouseX/width); //radians(frameCount*10-1);//radians(45);//radians(frameCount-1);
+  // control_xRotation = radians(slider_xRotation.getValueF());
+  // control_boxSize = new PVector (slider_scale_X.getValueF(), slider_scale_Y.getValueF(), slider_scale_Z.getValueF());
+  // control_viewCentre = new PVector (-slider_XZ.getValueXF(), -slider_height.getValueF(), slider_XZ.getValueYF());
+  // control_viewCentre = new PVector(control_viewCentre.x * control_boxSize.x, control_viewCentre.y * control_boxSize.y, control_viewCentre.z * control_boxSize.z); 
+  // control_gridFrequency = slider_gridFrequency.getValueF();
+  // control_curvePrecision = slider_curvePrecision.getValueI();
   
   
   
@@ -109,7 +112,7 @@ void draw() {
    PVector x = new PVector(1,0,0);
    PVector y = new PVector(0,1,0);
    PVector z = new PVector(0,0,1);
-   PVector transformedViewCentre = control_viewCentre.copy();
+   PVector transformedViewCentre = new PVector(1,1,1);//control_viewCentre.copy();
    
    x = rotateAroundY(x, control_yRotation);
    y = rotateAroundY(y, control_yRotation); // superfluous really?

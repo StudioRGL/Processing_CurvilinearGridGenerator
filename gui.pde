@@ -18,17 +18,49 @@ public void mainControlPanel_Click1(GPanel source, GEvent event) { //_CODE_:main
   println("panel1 - GPanel >> GEvent." + event + " @ " + millis());
 } //_CODE_:mainControlPanel:436933:
 
-public void dropList1_click1(GDropList source, GEvent event) { //_CODE_:dropList1:285537:
-  println("dropList1 - GDropList >> GEvent." + event + " @ " + millis());
-} //_CODE_:dropList1:285537:
-
-public void slider_yRotation_change1(GSlider source, GEvent event) { //_CODE_:slider_yRotation:486820:
+public void slider_yRotation_change(GSlider source, GEvent event) { //_CODE_:slider_yRotation:486820:
   println("slider_yRotation - GSlider >> GEvent." + event + " @ " + millis());
 } //_CODE_:slider_yRotation:486820:
 
-public void slider2d1_change1(GSlider2D source, GEvent event) { //_CODE_:slider2d1:412024:
+public void slider2d1_change1(GSlider2D source, GEvent event) { //_CODE_:slider_XZ:412024:
   println("slider2d1 - GSlider2D >> GEvent." + event + " @ " + millis());
-} //_CODE_:slider2d1:412024:
+} //_CODE_:slider_XZ:412024:
+
+public void slider_xRotation_change(GSlider source, GEvent event) { //_CODE_:slider_xRotation:406935:
+  println("slider_xRotation - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_xRotation:406935:
+
+public void slider_gridFrequency_change(GSlider source, GEvent event) { //_CODE_:slider_gridFrequency:962835:
+  println("slider2 - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_gridFrequency:962835:
+
+public void slider_curvePrecision_change(GSlider source, GEvent event) { //_CODE_:slider_curvePrecision:781179:
+  println("slider3 - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_curvePrecision:781179:
+
+public void slider_scale_Z_change(GSlider source, GEvent event) { //_CODE_:slider_scale_Z:269361:
+  println("slider4 - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_scale_Z:269361:
+
+public void slider5_change1(GSlider source, GEvent event) { //_CODE_:slider_scale_X:220433:
+  println("slider5 - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_scale_X:220433:
+
+public void slider6_change1(GSlider source, GEvent event) { //_CODE_:slider_scale_Y:748180:
+  println("slider6 - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_scale_Y:748180:
+
+public void slider7_change1(GSlider source, GEvent event) { //_CODE_:slider_height:787444:
+  println("slider7 - GSlider >> GEvent." + event + " @ " + millis());
+} //_CODE_:slider_height:787444:
+
+public void option1_clicked1(GOption source, GEvent event) { //_CODE_:option1:353142:
+  println("option1 - GOption >> GEvent." + event + " @ " + millis());
+} //_CODE_:option1:353142:
+
+public void option2_clicked1(GOption source, GEvent event) { //_CODE_:option2:978281:
+  println("option2 - GOption >> GEvent." + event + " @ " + millis());
+} //_CODE_:option2:978281:
 
 
 
@@ -38,35 +70,99 @@ public void createGUI(){
   G4P.messagesEnabled(false);
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
-  surface.setTitle("Sketch Window");
+  G4P.setDisplayFont("Arial", G4P.PLAIN, 12);
+  surface.setTitle("Studio RGL Curvilinear Grid Generator");
   mainControlPanel = new GPanel(this, 16, 944, 800, 240, "Grid Controls");
   mainControlPanel.setCollapsible(false);
   mainControlPanel.setText("Grid Controls");
   mainControlPanel.setOpaque(true);
   mainControlPanel.addEventHandler(this, "mainControlPanel_Click1");
-  dropList1 = new GDropList(this, 688, 32, 90, 48, 2, 10);
-  dropList1.setItems(loadStrings("list_285537"), 0);
-  dropList1.addEventHandler(this, "dropList1_click1");
-  slider_yRotation = new GSlider(this, 16, 32, 192, 16, 10.0);
+  slider_yRotation = new GSlider(this, 272, 160, 192, 16, 10.0);
   slider_yRotation.setLimits(0.5, 0.0, 1.0);
   slider_yRotation.setStickToTicks(true);
   slider_yRotation.setNumberFormat(G4P.DECIMAL, 1);
   slider_yRotation.setOpaque(false);
-  slider_yRotation.addEventHandler(this, "slider_yRotation_change1");
-  slider2d1 = new GSlider2D(this, 480, 32, 192, 192);
-  slider2d1.setLimitsX(0.5, 0.0, 1.0);
-  slider2d1.setLimitsY(0.5, 0.0, 1.0);
-  slider2d1.setNumberFormat(G4P.DECIMAL, 2);
-  slider2d1.setOpaque(true);
-  slider2d1.addEventHandler(this, "slider2d1_change1");
-  mainControlPanel.addControl(dropList1);
+  slider_yRotation.addEventHandler(this, "slider_yRotation_change");
+  slider_XZ = new GSlider2D(this, 496, 32, 192, 192);
+  slider_XZ.setLimitsX(0.5, 0.0, 1.0);
+  slider_XZ.setLimitsY(0.5, 0.0, 1.0);
+  slider_XZ.setNumberFormat(G4P.DECIMAL, 2);
+  slider_XZ.setOpaque(true);
+  slider_XZ.addEventHandler(this, "slider2d1_change1");
+  slider_xRotation = new GSlider(this, 368, 112, 100, 40, 10.0);
+  slider_xRotation.setLimits(0.5, 0.0, 1.0);
+  slider_xRotation.setNumberFormat(G4P.DECIMAL, 2);
+  slider_xRotation.setOpaque(false);
+  slider_xRotation.addEventHandler(this, "slider_xRotation_change");
+  slider_gridFrequency = new GSlider(this, 16, 32, 100, 40, 10.0);
+  slider_gridFrequency.setLimits(0.5, 0.0, 1.0);
+  slider_gridFrequency.setNumberFormat(G4P.DECIMAL, 2);
+  slider_gridFrequency.setOpaque(false);
+  slider_gridFrequency.addEventHandler(this, "slider_gridFrequency_change");
+  slider_curvePrecision = new GSlider(this, 16, 80, 100, 40, 10.0);
+  slider_curvePrecision.setLimits(0.5, 0.0, 1.0);
+  slider_curvePrecision.setNumberFormat(G4P.DECIMAL, 2);
+  slider_curvePrecision.setOpaque(false);
+  slider_curvePrecision.addEventHandler(this, "slider_curvePrecision_change");
+  slider_scale_Z = new GSlider(this, 144, 192, 100, 40, 10.0);
+  slider_scale_Z.setLimits(0.5, 0.0, 1.0);
+  slider_scale_Z.setNumberFormat(G4P.DECIMAL, 2);
+  slider_scale_Z.setOpaque(false);
+  slider_scale_Z.addEventHandler(this, "slider_scale_Z_change");
+  slider_scale_X = new GSlider(this, 144, 112, 100, 40, 10.0);
+  slider_scale_X.setLimits(0.5, 0.0, 1.0);
+  slider_scale_X.setNumberFormat(G4P.DECIMAL, 2);
+  slider_scale_X.setOpaque(false);
+  slider_scale_X.addEventHandler(this, "slider5_change1");
+  slider_scale_Y = new GSlider(this, 144, 160, 100, 40, 10.0);
+  slider_scale_Y.setLimits(0.5, 0.0, 1.0);
+  slider_scale_Y.setNumberFormat(G4P.DECIMAL, 2);
+  slider_scale_Y.setOpaque(false);
+  slider_scale_Y.addEventHandler(this, "slider6_change1");
+  slider_height = new GSlider(this, 352, 32, 100, 40, 10.0);
+  slider_height.setLimits(0.5, 0.0, 1.0);
+  slider_height.setNumberFormat(G4P.DECIMAL, 2);
+  slider_height.setOpaque(false);
+  slider_height.addEventHandler(this, "slider7_change1");
+  togGroup1 = new GToggleGroup();
+  option1 = new GOption(this, 540, 1111, 120, 20);
+  option1.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  option1.setText("option text");
+  option1.setOpaque(false);
+  option1.addEventHandler(this, "option1_clicked1");
+  option2 = new GOption(this, 540, 590, 120, 20);
+  option2.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  option2.setText("option text");
+  option2.setOpaque(false);
+  option2.addEventHandler(this, "option2_clicked1");
+  togGroup1.addControl(option1);
+  option1.setSelected(true);
+  mainControlPanel.addControl(option1);
+  togGroup1.addControl(option2);
+  mainControlPanel.addControl(option2);
   mainControlPanel.addControl(slider_yRotation);
-  mainControlPanel.addControl(slider2d1);
+  mainControlPanel.addControl(slider_XZ);
+  mainControlPanel.addControl(slider_xRotation);
+  mainControlPanel.addControl(slider_gridFrequency);
+  mainControlPanel.addControl(slider_curvePrecision);
+  mainControlPanel.addControl(slider_scale_Z);
+  mainControlPanel.addControl(slider_scale_X);
+  mainControlPanel.addControl(slider_scale_Y);
+  mainControlPanel.addControl(slider_height);
 }
 
 // Variable declarations 
 // autogenerated do not edit
 GPanel mainControlPanel; 
-GDropList dropList1; 
 GSlider slider_yRotation; 
-GSlider2D slider2d1; 
+GSlider2D slider_XZ; 
+GSlider slider_xRotation; 
+GSlider slider_gridFrequency; 
+GSlider slider_curvePrecision; 
+GSlider slider_scale_Z; 
+GSlider slider_scale_X; 
+GSlider slider_scale_Y; 
+GSlider slider_height; 
+GToggleGroup togGroup1; 
+GOption option1; 
+GOption option2; 
