@@ -20,10 +20,10 @@ www.processing.org
 www.sojamo.de/libraries/controlP5
 
 ## TODO
-- [ ] Reverse X rotation axis
-- [ ] Fix missing vertex on line ends?
+- [x] Reverse X rotation axis
+- [ ] Fix missing vertex on line ends? Maybe later :-)
 - [ ] Set display text to match control values
-- [ ] Add controls for extending grid
+- [x] Add controls for extending grid
 - [ ] Test
 - [ ] Save sample grids
 - [ ] Record demo video
