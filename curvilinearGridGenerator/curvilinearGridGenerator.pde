@@ -1,4 +1,4 @@
-/* //<>//
+/* //<>// //<>//
 Copyright 2019 Studio RGL LLP
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,7 +13,7 @@ import processing.pdf.*;
 
 
 // control values
-int control_curvePrecision = 64;
+int control_curvePrecision = 32;
 //int control_projectionMode = 0;
 
 ControlP5 cp5;
@@ -28,6 +28,8 @@ float   control_xBoxSize = 1.0;
 float   control_yBoxSize = 1.0;
 float   control_zBoxSize = 1.0;
 float   control_height = 0.0;
+float   control_extend = 0.0;
+float   viewSnap = 0.01;
 Slider2D control_centre2D;
 RadioButton control_projectionMode;
 
@@ -51,13 +53,18 @@ void draw() {
 
   // Read GUI
   control_boxSize = new PVector(control_xBoxSize, control_yBoxSize, control_zBoxSize);
-  float vx = -control_centre2D.getArrayValue()[0] * 0.5 * control_xBoxSize;
-  float vy =  control_height * 0.5 * control_yBoxSize;
-  float vz = control_centre2D.getArrayValue()[1] * control_zBoxSize;
-  float snap = 0.01;
-  vx = round(vx/snap)*snap;
-  vy = round(vy/snap)*snap;
-  vz = round(vz/snap)*snap;
+  float vx = -control_centre2D.getArrayValue()[0];
+  float vy =  control_height;
+  float vz = control_centre2D.getArrayValue()[1];
+
+  vx = snap(vx, viewSnap);
+  vy = snap(vy, viewSnap);
+  vz = snap(vz, viewSnap);
+  
+  vx = vx * 0.5 * control_xBoxSize;
+  vy = vy * 0.5 * control_yBoxSize;
+  vz = vz * 0.5  * control_zBoxSize;
+  
   control_viewCentre = new PVector(vx,vy, vz); 
   
   
@@ -65,7 +72,25 @@ void draw() {
   
   if (pdfPath != null)
   {
+    // regular saver
     pdfLocation = pdfPath.getAbsolutePath() + ".pdf";
+    
+    // hacky autosaver, used for generating consistently named sample files
+    /*
+    String data = "";
+    int rounding = 2;
+    if (control_projectionMode.getValue() == 0){
+      data += "spherical";
+    }
+    else{
+      data += "cylindrical";
+    }
+    data += "_scale_" + nf(control_boxSize.x, 0, rounding) + "_"  + nf(control_boxSize.y, 0, rounding) + "_"  + nf(control_boxSize.z, 0, rounding);
+    data += "_centre_" + nf(control_centre2D.getArrayValue()[0], 0, rounding) + "_" +  nf(control_height, 0, rounding) + "_" +  nf(control_centre2D.getArrayValue()[1], 0, rounding);
+    data += "_rotation_" + nf(control_xRotation, 0, 1) + "_" + nf(control_yRotation, 0, 1);
+    pdfLocation = ("C:/Temp/grid_" + data + ".pdf"); // auto save override here
+    */
+    
     if (waitingToSave)
     {
       println ("waitingToSave");
@@ -110,35 +135,40 @@ void draw() {
    transformedViewCentre = rotateAroundY(transformedViewCentre, radians(control_yRotation));
    
    //println("x rotation = " + control_xRotation);
-   x = rotateAroundX(x, radians(control_xRotation));
-   y = rotateAroundX(y, radians(control_xRotation));
-   z = rotateAroundX(z, radians(control_xRotation));
-   transformedViewCentre = rotateAroundX(transformedViewCentre, radians(control_xRotation));
+   float reversedXRotation = -control_xRotation; // flip this because the slider 'feels' upside down
+   x = rotateAroundX(x, radians(reversedXRotation));
+   y = rotateAroundX(y, radians(reversedXRotation));
+   z = rotateAroundX(z, radians(reversedXRotation));
+   transformedViewCentre = rotateAroundX(transformedViewCentre, radians(reversedXRotation));
      
    
   //direction,  perpendicular,  centre,  width,  length, int nLines)
  
   // X PLANES
   stroke(255, 0, 0);
-  drawPlane(y,z, PVector.add(transformedViewCentre, x.copy().mult(0.5 * control_boxSize.x)), control_boxSize.z,control_boxSize.y, control_gridFrequency);
-  drawPlane(y,z, PVector.sub(transformedViewCentre, x.copy().mult(0.5 * control_boxSize.x)), control_boxSize.z,control_boxSize.y, control_gridFrequency);
+  drawPlane(y,z, PVector.add(transformedViewCentre, x.copy().mult(0.5 * control_boxSize.x)), control_boxSize.z,control_boxSize.y, control_gridFrequency, control_extend, control_extend);
+  drawPlane(y,z, PVector.sub(transformedViewCentre, x.copy().mult(0.5 * control_boxSize.x)), control_boxSize.z,control_boxSize.y, control_gridFrequency, control_extend, control_extend);
   
   // Z PLANE
   stroke(0, 127, 255);
-  drawPlane(x,y, PVector.add(transformedViewCentre, z.copy().mult(0.5 * control_boxSize.z)), control_boxSize.y,control_boxSize.x, control_gridFrequency);
+  drawPlane(x,y, PVector.add(transformedViewCentre, z.copy().mult(0.5 * control_boxSize.z)), control_boxSize.y,control_boxSize.x, control_gridFrequency, control_extend, control_extend);
+  drawPlane(x,y, PVector.sub(transformedViewCentre, z.copy().mult(0.5 * control_boxSize.z)), control_boxSize.y,control_boxSize.x, control_gridFrequency, control_extend, control_extend);
 
   // green for y
   stroke (0,255,0);
-  drawPlane(x,z, PVector.sub(transformedViewCentre, y.copy().mult(0.5 * control_boxSize.y)), control_boxSize.z,control_boxSize.x, control_gridFrequency);
+  drawPlane(x,z, PVector.sub(transformedViewCentre, y.copy().mult(0.5 * control_boxSize.y)), control_boxSize.z,control_boxSize.x, control_gridFrequency, control_extend, control_extend);
   stroke (0, 127,0);
-  drawPlane(x,z, PVector.add(transformedViewCentre, y.copy().mult(0.5 * control_boxSize.y)), control_boxSize.z,control_boxSize.x, control_gridFrequency); // ground
+  drawPlane(x,z, PVector.add(transformedViewCentre, y.copy().mult(0.5 * control_boxSize.y)), control_boxSize.z,control_boxSize.x, control_gridFrequency, control_extend, control_extend); // ground
+  
+  // stroke(0);
+  // drawLine(x.copy(), transformedViewCentre.copy().add(new PVector(-0.5,0,0.5)), 1); // test line
   
   
   
   // vanishing points
-  stroke(0);
-  float vpDistance = 400;
-  float crossSize = vpDistance/8;
+  stroke(127);
+  float vpDistance = 512;
+  float crossSize = vpDistance; // /32;
   drawCross(y, x, PVector.add(transformedViewCentre, z.copy().mult(vpDistance)), crossSize);
   drawCross(y, x, PVector.sub(transformedViewCentre, z.copy().mult(vpDistance)), crossSize);
   drawCross(y, z, PVector.add(transformedViewCentre, x.copy().mult(vpDistance)), crossSize);
@@ -170,14 +200,7 @@ void drawCross(PVector direction, PVector perpendicular, PVector centre, float c
   PVector centreToBottom = direction.copy().mult(-crossSize/2);
   left.add(centreToLeft);
   bottom.add(centreToBottom);
-  
-  
-  //println ("1 left = " + left);
-  //println ("1 bottom = " + bottom);
-  //println ("1 direction = " + direction);
-  //println ("1 perpendicular = " + perpendicular);
-  //println ("1 size = " + crossSize);
- 
+   
   // draw cross
   drawLine(perpendicular, left, crossSize);
   drawLine(direction, bottom, crossSize);
@@ -186,7 +209,7 @@ void drawCross(PVector direction, PVector perpendicular, PVector centre, float c
   
 }
 
-void drawPlane(PVector direction, PVector perpendicular, PVector centre, float planeWidth, float planeLength, float lineFrequency)
+void drawPlane(PVector direction, PVector perpendicular, PVector centre, float planeWidth, float planeLength, float lineFrequency, float extendX, float extendY)
 {
   direction.normalize();
   perpendicular.normalize();
@@ -196,20 +219,13 @@ void drawPlane(PVector direction, PVector perpendicular, PVector centre, float p
   int nLinesY = max(3, min(MAX_LINES, int(lineFrequency*planeLength)));
   
   
-  drawLineArray(direction, perpendicular, centre, planeWidth, planeLength, nLinesX);
-  drawLineArray(perpendicular, direction, centre, planeLength, planeWidth, nLinesY);
+  drawLineArray(direction, perpendicular, centre, planeWidth, planeLength+extendX, nLinesX);
+  drawLineArray(perpendicular, direction, centre, planeLength, planeWidth+extendY, nLinesY);
 }
 
 
 
 void drawLineArray(PVector direction, PVector perpendicular, PVector centre, float arrayWidth, float lineLength, int nLines){
-  //PVector perpendicular = normal.cross(direction);
-  //println ("normal = " + normal);
-  // println ("1 perpendicular = " + perpendicular);
-  // println ("1 direction = " + direction);
-  // println ("1 planeWidth = " + arrayWidth);
-  // println ("1 lineLength = " + lineLength);
-  
   PVector centreToEdge = new PVector();
   PVector centreToBottom = new PVector();
   PVector bottomCentre = new PVector();
@@ -240,7 +256,7 @@ void drawLineArray(PVector direction, PVector perpendicular, PVector centre, flo
 
 // subroutine that draws a line curvilinearly (sp?)
 void drawLine(PVector step, PVector start, float desiredLineLength){
-  int nPoints = control_curvePrecision;
+  int nPoints = ceil((1+pow(desiredLineLength, 0.5))*control_curvePrecision); // changed that so desired line length extends precision
   
   if (nPoints < 2)
   {
@@ -260,6 +276,7 @@ void drawLine(PVector step, PVector start, float desiredLineLength){
   float[] yPoint = new float [nPoints];
   boolean[] validPoint = new boolean[nPoints];
   
+  // calculate the polar positions of the xyz points 
   for (int iPoint = 0; iPoint < nPoints; iPoint++){
       x = start.x + iPoint * step.x;
       y = start.y + iPoint * step.y;
@@ -271,8 +288,7 @@ void drawLine(PVector step, PVector start, float desiredLineLength){
       xPoint[iPoint] = v1.x;
       yPoint[iPoint] = v1.y;
       
-      validPoint[iPoint] = z>0;   //don't render points behind the camera...
-     
+      validPoint[iPoint] = z>0;   //don't render points behind the camera... 
     }
   
   
@@ -295,6 +311,7 @@ void drawLine(PVector step, PVector start, float desiredLineLength){
           // if we were drawing, but it's time to stop (because the point isn't valid), let's stop
           endShape();
           drawing = false;
+          break;
         }
       }
     }
@@ -304,12 +321,14 @@ void drawLine(PVector step, PVector start, float desiredLineLength){
     }
 }
 
+
 // just rotates a vector
 PVector rotateAroundY( PVector source, float angle){
   PVector xz = new PVector (source.x, source.z);
   xz = xz.rotate(angle);
   return new PVector(xz.x, source.y, xz.y);
 }
+
 
 // just rotates a vector
 PVector rotateAroundX( PVector source, float angle){
@@ -328,7 +347,6 @@ PVector getCoordinates(float x, float y, float z){
   //old fisheye version
   //alpha = atan2(x, sqrt(y*y + z*z)) * scale;
   //beta = atan2(y, sqrt(x*x + z*z))  * scale;
-  
   
   // hemispheric polar
   if (control_projectionMode.getValue() == 0)
@@ -370,13 +388,14 @@ void fileSelected(File selection) {
 // just gets all the data
 String getDataString()
 {
+  int rounding = 2;
   String answer = "Studio RGL Curvilinear Grid Generator v1.0";
   answer += "\nwww.twitter.com/RealGoodLiars";
   answer += "\nwww.instagram.com/RealGoodLiars";
   answer += "\nBuilt with Processing and ControlP5 GUI";
-  answer += "\nBox Scale: " + control_boxSize;
-  answer += "\nView Centre: " + control_viewCentre;
-  answer += "\nRotation XY: " + control_xRotation + ", " + control_yRotation;
+  answer += "\nBox Scale: " + nf(control_boxSize.x, 0, rounding) + ", "  + nf(control_boxSize.y, 0, rounding) + ", "  + nf(control_boxSize.z, 0, rounding);
+  answer += "\nView Centre: " + nf(control_centre2D.getArrayValue()[0], 0, rounding) + ", " +  nf(control_height, 0, rounding) + ", " +  nf(control_centre2D.getArrayValue()[1], 0, rounding);
+  answer += "\nRotation XY: " + nf(control_xRotation, 0, rounding) + ", " + nf(control_yRotation, 0, rounding);
   
   return answer;
 }
@@ -384,6 +403,12 @@ String getDataString()
 void triggerSave()
 {
   selectOutput("Select a file to write to:", "fileSelected");
+}
+
+
+float snap(float n, float amount)
+{
+  return (round(n/amount)*amount);
 }
 
 // save a pdf if we press the mouse

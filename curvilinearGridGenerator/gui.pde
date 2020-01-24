@@ -4,7 +4,7 @@ void createGUI(){
   println("created GUI");
   cp5 = new ControlP5(this);
   
-  int nStackedSliders = 6;
+  int nStackedSliders = 7;
   int sliderSpacing = 48;
   int sliderWidth = 512;
   int buttonWidth = sliderWidth/4;
@@ -41,12 +41,16 @@ void createGUI(){
   s.setColorActive(color(0, 0, 255));
   yPos += sliderSpacing;
   
+  s = cp5.addSlider("control_extend");
+  setupSlider(s, "Grid Extend", 0, 128, xPos, yPos, sliderWidth, sliderHeight, 0.1);
+  yPos += sliderSpacing; 
+  
   s = cp5.addSlider("control_gridFrequency");
   setupSlider(s, "Grid Frequency", 4, 32, xPos, yPos, sliderWidth, sliderHeight, 1);
   yPos += sliderSpacing;
   
   s = cp5.addSlider("control_curvePrecision");
-  setupSlider(s, "Curve Precision", 4, 256, xPos, yPos, sliderWidth, sliderHeight, 4);
+  setupSlider(s, "Curve Resolution", 4, 64, xPos, yPos, sliderWidth, sliderHeight, 4);
   yPos += sliderSpacing;
   
   // vertical sliders
@@ -58,7 +62,7 @@ void createGUI(){
   xPos += sliderSpacing;
   
   s = cp5.addSlider("control_height");
-  setupSlider(s, "Canera Height", -1, 1, xPos, yPos, sliderHeight, verticalSliderWidth, 0.05);
+  setupSlider(s, "Height", -1, 1, xPos, yPos, sliderHeight, verticalSliderWidth, 0.05);
   xPos += sliderSpacing;
 
   control_centre2D = cp5.addSlider2D("")
@@ -66,7 +70,7 @@ void createGUI(){
                .setPosition(xPos,yPos)
                .setMinX(-1)
                .setMaxX(1)
-               .setMinY(-0.5)
+               .setMinY(-1)
                .setMaxY(1)
                //.setArrayValue(0, 0)
                //.setArrayValue(1, 0)
