@@ -1,9 +1,10 @@
-# Curvilinear Grid Generator
-## A grid generator for 2D animation, built with Processing & ControlP5
+# RGL Curvilinear Perspective Grid Generator
+## A perspective grid generator for 2D animation, built with Processing & ControlP5
 
-This was originally built as an in-house tool by Studio RGL in London. We don't require you to credit us, but if you use this in your work feel free to point people to our Twitter, we'd love to see what you get up to!
+This is a tool to assist in drawing panning perspective backgrounds for 2D animation.
+was originally built as an in-house tool by Studio RGL in London. We don't require you to credit us, but if you use this in your work feel free to link to our Twitter etc. And of course, tweet us some pictures of your art, we'd love to see what you're making!
 
-https://twitter.com/RealGoodLiars  
+https://twitter.com/realgoodliars  
 https://www.instagram.com/realgoodliars
 
 Usage:
@@ -11,6 +12,7 @@ Usage:
  3) Move the sliders to get the grid you want
  4) Click to save a pdf
  2) Pick a file location
+ 4) Optional - if you want to customize the grids (for example for import into Adobe Animate or OpenToonz) you can open them in a vector art tool like Adobe Illustrator - you can use "select by colour" to separate the different grids onto layers, etc.
  5) Make some cool animation!
 
 Built using Processing & ControlP5 by Andreas Schlegel  
@@ -20,6 +22,7 @@ www.sojamo.de/libraries/controlP5
 ## TODO
 - [ ] Reverse X rotation axis
 - [ ] Fix missing vertex on line ends?
+- [ ] Set display text to match control values
 - [ ] Add controls for extending grid
 - [ ] Test
 - [ ] Save sample grids
