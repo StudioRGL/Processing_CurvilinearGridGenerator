@@ -19,6 +19,7 @@ www.sojamo.de/libraries/controlP5
 
 ## TODO
 - [ ] Reverse X rotation axis
+- [ ] Fix missing vertex on line ends?
 - [ ] Add controls for extending grid
 - [ ] Test
 - [ ] Save sample grids
