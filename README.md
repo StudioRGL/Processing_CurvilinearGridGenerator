@@ -21,8 +21,7 @@ www.sojamo.de/libraries/controlP5
 
 ## TODO
 - [x] Reverse X rotation axis
-- [ ] Fix missing vertex on line ends? Maybe later :-)
-- [ ] Set display text to match control values
+- [x] Set display text to match control values
 - [x] Add controls for extending grid
 - [ ] Test
 - [ ] Save sample grids
