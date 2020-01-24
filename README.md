@@ -17,3 +17,9 @@ Built using Processing & ControlP5 by Andreas Schlegel
 www.processing.org  
 www.sojamo.de/libraries/controlP5
 
+## TODO
+- [ ] Reverse X rotation axis
+- [ ] Add controls for extending grid
+- [ ] Test
+- [ ] Save sample grids
+- [ ] Record demo video
