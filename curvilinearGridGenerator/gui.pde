@@ -6,11 +6,11 @@ void createGUI(){
   
   int nStackedSliders = 7;
   int sliderSpacing = 48;
-  int sliderWidth = 512;
+  int sliderWidth = 256;
   int buttonWidth = sliderWidth/4;
   int verticalSliderWidth = int(sliderSpacing*(nStackedSliders-0.5));
   int sliderHeight = 32;
-  int startHeight = height-sliderSpacing*nStackedSliders-sliderSpacing;
+  int startHeight = height - (sliderSpacing * nStackedSliders) - sliderSpacing - (verticalSliderWidth);
   int xPos = sliderSpacing;
   int yPos = startHeight;
 
@@ -54,8 +54,7 @@ void createGUI(){
   yPos += sliderSpacing;
   
   // vertical sliders
-  yPos = startHeight;
-  xPos += sliderWidth*1.2;
+  xPos = sliderSpacing;  // reset horizontal
   
   s = cp5.addSlider("control_xRotation");
   setupSlider(s, "X Rotation", -90, 90, xPos, yPos, sliderHeight, verticalSliderWidth, 0.5);
@@ -80,7 +79,8 @@ void createGUI(){
                .setValue(0,0);
   yPos += sliderSpacing; 
 
-   
+  
+  // add save button
   xPos = width-buttonWidth/2-2*sliderSpacing;
   cp5.addButton("triggerSave")
                 .setLabel("Save PDF")
@@ -88,18 +88,20 @@ void createGUI(){
                 .setSize(buttonWidth,sliderHeight)
                 ;
   
+  xPos = sliderSpacing;
+  yPos = startHeight-sliderSpacing-sliderHeight;
+  // add control for projection mode
   control_projectionMode = cp5.addRadioButton("myList-d1");
-  control_projectionMode.setPosition(xPos, startHeight);
+  control_projectionMode.setPosition(xPos, yPos);
   control_projectionMode.addItem("Spherical",0);
   control_projectionMode.addItem("Cylindrical", 1);
   control_projectionMode.setColorLabels(color(0));
   control_projectionMode.setItemHeight(sliderHeight);
   control_projectionMode.setItemWidth(sliderHeight);
   control_projectionMode.activate(0);
-   
+  
   println ("added sliders ok");
 }
-
 
 void setupSlider(Slider s, String label, float min, float max, int xPos, int yPos, int sliderWidth, int sliderHeight, float step){
   s.setLabel(label);

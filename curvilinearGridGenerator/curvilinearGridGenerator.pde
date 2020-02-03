@@ -32,6 +32,7 @@ float   control_extend = 0.0;
 float   viewSnap = 0.01;
 Slider2D control_centre2D;
 RadioButton control_projectionMode;
+float pixelSize; // how big to draw the thing. probably the screen height, but we don't know until the app's started
 
 File pdfPath;
 boolean waitingToSave = false;
@@ -39,8 +40,10 @@ boolean saving = false;
 
 void setup() {
   
-  size(1600, 1600);  //this just runs the program in interactive mode
-  strokeWeight(0.5);
+  fullScreen();
+  pixelSize = min(displayWidth, displayHeight) * 0.9;
+  // size(1600, 1600);  //this just runs the program in interactive mode
+  strokeWeight(0.5);  // set it to 0.5 for regular use, 2 for screen capture
   smooth();
   loop();
  
@@ -116,7 +119,7 @@ void draw() {
   
   
   fill(34);
-  text(getDataString(), 32,32);
+  text(getDataString(), 48,48);
   noFill();
   
   translate(width/2,height/2);
@@ -351,14 +354,14 @@ PVector getCoordinates(float x, float y, float z){
   // hemispheric polar
   if (control_projectionMode.getValue() == 0)
   {
-    alpha = 0.5*width*x/(sqrt(x*x + y*y + z*z));
-    beta = 0.5*width*y/(sqrt(x*x + y*y + z*z));
+    alpha = 0.5*pixelSize*x/(sqrt(x*x + y*y + z*z));
+    beta = 0.5*pixelSize*y/(sqrt(x*x + y*y + z*z));
   }
   else if (control_projectionMode.getValue() == 1)
   {
     // cylindrical
-    alpha = atan2(x,z)*width   *0.25;
-    beta = 0.5*width*y/(sqrt(x*x + y*y + z*z)) * 0.5;
+    alpha = atan2(x,z)*pixelSize   *0.25;
+    beta = 0.5*pixelSize*y/(sqrt(x*x + y*y + z*z)) * 0.5;
   }
   
   return new PVector(alpha, beta, 0);
