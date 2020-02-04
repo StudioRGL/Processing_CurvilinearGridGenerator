@@ -83,7 +83,7 @@ void createGUI(){
   // add save button
   xPos = width-buttonWidth/2-2*sliderSpacing;
   cp5.addButton("triggerSave")
-                .setLabel("Save PDF")
+                .setLabel("Save File")
                 .setPosition(xPos, height-2*sliderSpacing)
                 .setSize(buttonWidth,sliderHeight)
                 ;
@@ -99,6 +99,19 @@ void createGUI(){
   control_projectionMode.setItemHeight(sliderHeight);
   control_projectionMode.setItemWidth(sliderHeight);
   control_projectionMode.activate(0);
+  
+  xPos += sliderWidth/2;
+  
+  // add save preferences
+  control_saveMode =  cp5.addRadioButton("myList-d2");
+  control_saveMode.setPosition(xPos, yPos);
+  control_saveMode.addItem("Save PDF", 0);
+  // control_saveMode.addItem("Save SVG", 1); // no longer supported by processing?
+  control_saveMode.addItem("Save PNG", 2);
+  control_saveMode.setColorLabels(color(0));
+  control_saveMode.setItemHeight(sliderHeight);
+  control_saveMode.setItemWidth(sliderHeight);
+  control_saveMode.activate(0);
   
   println ("added sliders ok");
 }

@@ -32,9 +32,10 @@ float   control_extend = 0.0;
 float   viewSnap = 0.01;
 Slider2D control_centre2D;
 RadioButton control_projectionMode;
+RadioButton control_saveMode;
 float pixelSize; // how big to draw the thing. probably the screen height, but we don't know until the app's started
 
-File pdfPath;
+File exportPath;
 boolean waitingToSave = false;
 boolean saving = false;
 
@@ -71,12 +72,22 @@ void draw() {
   control_viewCentre = new PVector(vx,vy, vz); 
   
   
-  String pdfLocation = "";
+  String exportLocation = "";
   
-  if (pdfPath != null)
+  if (exportPath != null)
   {
+    exportLocation = exportPath.getAbsolutePath();
+    
     // regular saver
-    pdfLocation = pdfPath.getAbsolutePath() + ".pdf";
+    if (control_saveMode.getValue() == 0){
+      exportLocation += ".pdf";
+    }
+    else if (control_saveMode.getValue() == 1){
+      exportLocation += ".svg";
+    }
+    else if (control_saveMode.getValue() == 2){
+      exportLocation += ".png";
+    }
     
     // hacky autosaver, used for generating consistently named sample files
     /*
@@ -91,14 +102,22 @@ void draw() {
     data += "_scale_" + nf(control_boxSize.x, 0, rounding) + "_"  + nf(control_boxSize.y, 0, rounding) + "_"  + nf(control_boxSize.z, 0, rounding);
     data += "_centre_" + nf(control_centre2D.getArrayValue()[0], 0, rounding) + "_" +  nf(control_height, 0, rounding) + "_" +  nf(control_centre2D.getArrayValue()[1], 0, rounding);
     data += "_rotation_" + nf(control_xRotation, 0, 1) + "_" + nf(control_yRotation, 0, 1);
-    pdfLocation = ("C:/Temp/grid_" + data + ".pdf"); // auto save override here
+    exportLocation = ("C:/Temp/grid_" + data + ".pdf"); // auto save override here
     */
     
     if (waitingToSave)
     {
       println ("waitingToSave");
-      println (pdfLocation);
-      beginRecord(PDF, pdfLocation);
+      println (exportLocation);
+      if (control_saveMode.getValue() == 0){
+        beginRecord(PDF, exportLocation);
+      }
+      else if (control_saveMode.getValue() == 1){
+        beginRecord(SVG, exportLocation);
+      }
+    
+      // we don't need to begin record for png
+      
       waitingToSave = false;
       saving = true;
     }
@@ -184,7 +203,14 @@ void draw() {
   // stop recording if we were recording
   if (saving == true)
   {
-    endRecord();
+    if (control_saveMode.getValue()==2){
+        print("saving png");
+        save(exportLocation);
+      }
+    else{
+      endRecord();
+    }
+    
     saving = false;
     print ("Save completed");
   }
@@ -360,8 +386,8 @@ PVector getCoordinates(float x, float y, float z){
   else if (control_projectionMode.getValue() == 1)
   {
     // cylindrical
-    alpha = atan2(x,z)*pixelSize   *0.25;
-    beta = 0.5*pixelSize*y/(sqrt(x*x + y*y + z*z)) * 0.5;
+    alpha = atan2(x,z)*pixelSize   *0.5;
+    beta = 0.5*pixelSize*y/(sqrt(x*x + y*y + z*z)); // assumes your screen is at least 2:1! no portrait support
   }
   
   return new PVector(alpha, beta, 0);
@@ -376,12 +402,12 @@ void fileSelected(File selection) {
   if (selection == null)
   {
     //println("Window was closed or the user hit cancel.");
-    pdfPath = null;
+    exportPath = null;
     waitingToSave = false;
   }
   else
   {
-    pdfPath = selection;
+    exportPath = selection;
     waitingToSave = true;
     println("waitingToSave: " + selection.getAbsolutePath());
   }
@@ -412,9 +438,4 @@ void triggerSave()
 float snap(float n, float amount)
 {
   return (round(n/amount)*amount);
-}
-
-// save a pdf if we press the mouse
-void mousePressed(){
-  // triggerSave();
 }
