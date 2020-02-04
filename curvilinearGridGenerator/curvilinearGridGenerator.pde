@@ -8,17 +8,14 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import controlP5.*;  // switched to a different GUI library
-import processing.pdf.*;
+import controlP5.*;  // for UI: http://www.sojamo.de/libraries/controlP5
+import processing.pdf.*;  // for PDF export
 
+// github version
+String versionString = "v0.1.0-alpha";
 
-// control values
-int control_curvePrecision = 32;
-//int control_projectionMode = 0;
-
-ControlP5 cp5;
-ControlWindow controlWindow;
-
+// control values 
+int     control_curvePrecision = 32;
 float   control_yRotation = 0;
 float   control_xRotation = 0;
 PVector control_boxSize = new PVector(1,1,1);
@@ -29,25 +26,28 @@ float   control_yBoxSize = 1.0;
 float   control_zBoxSize = 1.0;
 float   control_height = 0.0;
 float   control_extend = 0.0;
-float   viewSnap = 0.01;
-Slider2D control_centre2D;
-RadioButton control_projectionMode;
-RadioButton control_saveMode;
-float pixelSize; // how big to draw the thing. probably the screen height, but we don't know until the app's started
 
+// other settings
+float viewSnap = 0.01;
+float pixelDrawSize;  // how big to draw the thing. probably the screen height, but we don't know until after setup()
 File exportPath;
 boolean waitingToSave = false;
 boolean saving = false;
 
+// UI stuff
+ControlP5 cp5;
+ControlWindow controlWindow;
+Slider2D control_centre2D;
+RadioButton control_projectionMode;
+RadioButton control_saveMode;
+
+
 void setup() {
-  
   fullScreen();
-  pixelSize = min(displayWidth, displayHeight) * 0.9;
-  // size(1600, 1600);  //this just runs the program in interactive mode
-  strokeWeight(0.5);  // set it to 0.5 for regular use, 2 for screen capture
+  pixelDrawSize = min(displayWidth, displayHeight) * 0.9; // the size multiplier for the final shape
+  strokeWeight(0.5);  // set it to 0.5 for regular use, 2 for screen capture for instagram etc
   smooth();
   loop();
- 
   createGUI();
 }
 
@@ -55,25 +55,27 @@ void setup() {
 void draw() {
   clear();
 
-  // Read GUI
+  // Read GUI values
   control_boxSize = new PVector(control_xBoxSize, control_yBoxSize, control_zBoxSize);
   float vx = -control_centre2D.getArrayValue()[0];
   float vy =  control_height;
   float vz = control_centre2D.getArrayValue()[1];
 
+  // snap the values so they're easier to recreate
   vx = snap(vx, viewSnap);
   vy = snap(vy, viewSnap);
   vz = snap(vz, viewSnap);
   
+  // scale them to the full size of the box
   vx = vx * 0.5 * control_xBoxSize;
   vy = vy * 0.5 * control_yBoxSize;
-  vz = vz * 0.5  * control_zBoxSize;
+  vz = vz * 0.5 * control_zBoxSize;
   
   control_viewCentre = new PVector(vx,vy, vz); 
   
   
+  // setup saving, if required
   String exportLocation = "";
-  
   if (exportPath != null)
   {
     exportLocation = exportPath.getAbsolutePath();
@@ -122,50 +124,33 @@ void draw() {
       saving = true;
     }
   }
-  else
-  {
-    if (waitingToSave){
-      println("PDF path is null but we're tryna save");
-    }
-  }
   
   
-  
- 
- 
- 
+  // do the drawing
   background(255);
-  
-  
   fill(34);
-  text(getDataString(), 48,48);
+  text(getDataString(), 48, 48);
   noFill();
-  
   translate(width/2,height/2);
 
-  
   // now we gonna do all the drawin'
-  
-   PVector x = new PVector(1,0,0);
-   PVector y = new PVector(0,1,0);
-   PVector z = new PVector(0,0,1);
-   PVector transformedViewCentre = control_viewCentre.copy();
-   
-   x = rotateAroundY(x, radians(control_yRotation));
-   y = rotateAroundY(y, radians(control_yRotation)); // superfluous really?
-   z = rotateAroundY(z, radians(control_yRotation));
-   transformedViewCentre = rotateAroundY(transformedViewCentre, radians(control_yRotation));
-   
-   //println("x rotation = " + control_xRotation);
-   float reversedXRotation = -control_xRotation; // flip this because the slider 'feels' upside down
-   x = rotateAroundX(x, radians(reversedXRotation));
-   y = rotateAroundX(y, radians(reversedXRotation));
-   z = rotateAroundX(z, radians(reversedXRotation));
-   transformedViewCentre = rotateAroundX(transformedViewCentre, radians(reversedXRotation));
-     
-   
-  //direction,  perpendicular,  centre,  width,  length, int nLines)
+  PVector x = new PVector(1,0,0);
+  PVector y = new PVector(0,1,0);
+  PVector z = new PVector(0,0,1);
+  PVector transformedViewCentre = control_viewCentre.copy();
  
+  x = rotateAroundY(x, radians(control_yRotation));
+  y = rotateAroundY(y, radians(control_yRotation)); // superfluous really?
+  z = rotateAroundY(z, radians(control_yRotation));
+  transformedViewCentre = rotateAroundY(transformedViewCentre, radians(control_yRotation));
+ 
+  //println("x rotation = " + control_xRotation);
+  float reversedXRotation = -control_xRotation; // flip this because the slider 'feels' upside down
+  x = rotateAroundX(x, radians(reversedXRotation));
+  y = rotateAroundX(y, radians(reversedXRotation));
+  z = rotateAroundX(z, radians(reversedXRotation));
+  transformedViewCentre = rotateAroundX(transformedViewCentre, radians(reversedXRotation));
+   
   // X PLANES
   stroke(255, 0, 0);
   drawPlane(y,z, PVector.add(transformedViewCentre, x.copy().mult(0.5 * control_boxSize.x)), control_boxSize.z,control_boxSize.y, control_gridFrequency, control_extend, control_extend);
@@ -182,12 +167,7 @@ void draw() {
   stroke (0, 127,0);
   drawPlane(x,z, PVector.add(transformedViewCentre, y.copy().mult(0.5 * control_boxSize.y)), control_boxSize.z,control_boxSize.x, control_gridFrequency, control_extend, control_extend); // ground
   
-  // stroke(0);
-  // drawLine(x.copy(), transformedViewCentre.copy().add(new PVector(-0.5,0,0.5)), 1); // test line
-  
-  
-  
-  // vanishing points
+  // draw vanishing points
   stroke(127);
   float vpDistance = 512;
   float crossSize = vpDistance; // /32;
@@ -199,8 +179,7 @@ void draw() {
   drawCross(x, z, PVector.sub(transformedViewCentre, y.copy().mult(vpDistance)), crossSize);
   
   
-  
-  // stop recording if we were recording
+  // stop recording (if we were recording)
   if (saving == true)
   {
     if (control_saveMode.getValue()==2){
@@ -210,19 +189,16 @@ void draw() {
     else{
       endRecord();
     }
-    
     saving = false;
     print ("Save completed");
   }
-  
-  
-  translate(-width/2, -height/2);
+
+  translate(-width/2, -height/2); // put it back, or we're gonna lose the GUI!
 }
 
 
 void drawCross(PVector direction, PVector perpendicular, PVector centre, float crossSize)
 {
-  
   PVector left = centre.copy();
   PVector bottom = centre.copy();
   PVector centreToLeft = perpendicular.copy().mult(-crossSize/2);
@@ -233,10 +209,8 @@ void drawCross(PVector direction, PVector perpendicular, PVector centre, float c
   // draw cross
   drawLine(perpendicular, left, crossSize);
   drawLine(direction, bottom, crossSize);
-  
- 
-  
 }
+
 
 void drawPlane(PVector direction, PVector perpendicular, PVector centre, float planeWidth, float planeLength, float lineFrequency, float extendX, float extendY)
 {
@@ -247,11 +221,9 @@ void drawPlane(PVector direction, PVector perpendicular, PVector centre, float p
   int nLinesX = max(3, min(MAX_LINES, int(lineFrequency*planeWidth)));
   int nLinesY = max(3, min(MAX_LINES, int(lineFrequency*planeLength)));
   
-  
   drawLineArray(direction, perpendicular, centre, planeWidth, planeLength+extendX, nLinesX);
   drawLineArray(perpendicular, direction, centre, planeLength, planeWidth+extendY, nLinesY);
 }
-
 
 
 void drawLineArray(PVector direction, PVector perpendicular, PVector centre, float arrayWidth, float lineLength, int nLines){
@@ -281,8 +253,6 @@ void drawLineArray(PVector direction, PVector perpendicular, PVector centre, flo
 }
 
 
-
-
 // subroutine that draws a line curvilinearly (sp?)
 void drawLine(PVector step, PVector start, float desiredLineLength){
   int nPoints = ceil((1+pow(desiredLineLength, 0.5))*control_curvePrecision); // changed that so desired line length extends precision
@@ -310,7 +280,6 @@ void drawLine(PVector step, PVector start, float desiredLineLength){
       x = start.x + iPoint * step.x;
       y = start.y + iPoint * step.y;
       z = start.z + iPoint * step.z;
-
 
       PVector v1 = getCoordinates(x,y,z);
 
@@ -371,7 +340,6 @@ PVector rotateAroundX( PVector source, float angle){
 PVector getCoordinates(float x, float y, float z){
   float alpha = 0;
   float beta = 0;
-  // float scale = width/3.5;//float(mouseY)/height;
   
   //old fisheye version
   //alpha = atan2(x, sqrt(y*y + z*z)) * scale;
@@ -380,21 +348,18 @@ PVector getCoordinates(float x, float y, float z){
   // hemispheric polar
   if (control_projectionMode.getValue() == 0)
   {
-    alpha = 0.5*pixelSize*x/(sqrt(x*x + y*y + z*z));
-    beta = 0.5*pixelSize*y/(sqrt(x*x + y*y + z*z));
+    alpha = 0.5*pixelDrawSize*x/(sqrt(x*x + y*y + z*z));
+    beta = 0.5*pixelDrawSize*y/(sqrt(x*x + y*y + z*z));
   }
   else if (control_projectionMode.getValue() == 1)
   {
     // cylindrical
-    alpha = atan2(x,z)*pixelSize   *0.5;
-    beta = 0.5*pixelSize*y/(sqrt(x*x + y*y + z*z)); // assumes your screen is at least 2:1! no portrait support
+    alpha = atan2(x,z)*pixelDrawSize   *0.5;
+    beta = 0.5*pixelDrawSize*y/(sqrt(x*x + y*y + z*z)); // assumes your screen is at least 2:1! no portrait support
   }
   
   return new PVector(alpha, beta, 0);
 }
-
-
-
 
 
 // from  https://processing.org/reference/selectOutput_.html
@@ -414,11 +379,11 @@ void fileSelected(File selection) {
 }
 
 
-// just gets all the data
 String getDataString()
 {
+  // just gets all the data for printing
   int rounding = 2;
-  String answer = "Studio RGL Curvilinear Grid Generator v1.0";
+  String answer = "Studio RGL Curvilinear Grid Generator " + versionString;
   answer += "\nwww.twitter.com/RealGoodLiars";
   answer += "\nwww.instagram.com/RealGoodLiars";
   answer += "\nBuilt with Processing and ControlP5 GUI";
@@ -428,6 +393,7 @@ String getDataString()
   
   return answer;
 }
+
 
 void triggerSave()
 {

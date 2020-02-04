@@ -1,7 +1,4 @@
-
-
 void createGUI(){
-  println("created GUI");
   cp5 = new ControlP5(this);
   
   int nStackedSliders = 7;
@@ -13,9 +10,6 @@ void createGUI(){
   int startHeight = height - (sliderSpacing * nStackedSliders) - sliderSpacing - (verticalSliderWidth);
   int xPos = sliderSpacing;
   int yPos = startHeight;
-
-  
-  color labelColor = color(0);
   
   Slider s;
   
@@ -90,6 +84,7 @@ void createGUI(){
   
   xPos = sliderSpacing;
   yPos = startHeight-sliderSpacing-sliderHeight;
+  
   // add control for projection mode
   control_projectionMode = cp5.addRadioButton("myList-d1");
   control_projectionMode.setPosition(xPos, yPos);
@@ -112,9 +107,8 @@ void createGUI(){
   control_saveMode.setItemHeight(sliderHeight);
   control_saveMode.setItemWidth(sliderHeight);
   control_saveMode.activate(0);
-  
-  println ("added sliders ok");
 }
+
 
 void setupSlider(Slider s, String label, float min, float max, int xPos, int yPos, int sliderWidth, int sliderHeight, float step){
   s.setLabel(label);
