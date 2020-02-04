@@ -109,8 +109,7 @@ void draw() {
     
     if (waitingToSave)
     {
-      println ("waitingToSave");
-      println (exportLocation);
+      println ("Saving: " + exportLocation);
       if (control_saveMode.getValue() == 0){
         beginRecord(PDF, exportLocation);
       }
@@ -144,7 +143,6 @@ void draw() {
   z = rotateAroundY(z, radians(control_yRotation));
   transformedViewCentre = rotateAroundY(transformedViewCentre, radians(control_yRotation));
  
-  //println("x rotation = " + control_xRotation);
   float reversedXRotation = -control_xRotation; // flip this because the slider 'feels' upside down
   x = rotateAroundX(x, radians(reversedXRotation));
   y = rotateAroundX(y, radians(reversedXRotation));
@@ -183,14 +181,14 @@ void draw() {
   if (saving == true)
   {
     if (control_saveMode.getValue()==2){
-        print("saving png");
+        println("saving png");
         save(exportLocation);
       }
     else{
       endRecord();
     }
     saving = false;
-    print ("Save completed");
+    print ("Save completed!");
   }
 
   translate(-width/2, -height/2); // put it back, or we're gonna lose the GUI!
@@ -366,7 +364,6 @@ PVector getCoordinates(float x, float y, float z){
 void fileSelected(File selection) {
   if (selection == null)
   {
-    //println("Window was closed or the user hit cancel.");
     exportPath = null;
     waitingToSave = false;
   }
@@ -374,7 +371,7 @@ void fileSelected(File selection) {
   {
     exportPath = selection;
     waitingToSave = true;
-    println("waitingToSave: " + selection.getAbsolutePath());
+    println("Waiting to save: " + selection.getAbsolutePath());
   }
 }
 
