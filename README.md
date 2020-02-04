@@ -7,14 +7,21 @@ was originally built as an in-house tool by Studio RGL in London. We don't requi
 https://twitter.com/realgoodliars  
 https://www.instagram.com/realgoodliars
 
+Installation:
+ 1) Grab the appropriate .zip here: https://github.com/StudioRGL/Processing_CurvilinearGridGenerator/releases
+ 2) Unzip it
+ 3) If you're on a platform other than Windows-64 or MacOS you may need to install Java as well
+ 4) Run it!
+ 
+Alternatively you can use Processing 3.5 to run it interactively from the source code (open curvilinearGridGenerator.pde).
+
 Usage:
- 1) Run the program (tested using Processing 3.5, you can compile and run standalone if u want)
- 3) Move the sliders to get the grid you want (use scroll wheel for fine incremental control)
+ 1) Move the sliders to get the grid you want (use scroll wheel for fine incremental control)
  4) Click to save a PDF or PNG
  2) Pick a file location
  4) Optional - if you want to customize the grids (for example for import into Adobe Animate or OpenToonz) you can open them in a vector art tool like Adobe Illustrator - you can use "select by colour" to separate the different grids onto layers, etc.
- 5) Make some cool animation!
  6) Use 'ESC' to quit
+ 5) Make some cool animation!
 
 Built using Processing & ControlP5 by Andreas Schlegel  
 www.processing.org  
