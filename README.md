@@ -7,7 +7,7 @@ was originally built as an in-house tool by Studio RGL in London. We don't requi
 https://twitter.com/realgoodliars  
 https://www.instagram.com/realgoodliars
 
-Installation:
+## Installation
  1) Grab the appropriate .zip here: https://github.com/StudioRGL/Processing_CurvilinearGridGenerator/releases
  2) Unzip it
  3) If you're on a platform other than Windows-64 or MacOS you may need to install Java as well
@@ -15,7 +15,7 @@ Installation:
  
 Alternatively you can use Processing 3.5 to run it interactively from the source code (open curvilinearGridGenerator.pde).
 
-Usage:
+## Usage
  1) Move the sliders to get the grid you want (use scroll wheel for fine incremental control)
  4) Click to save a PDF or PNG
  2) Pick a file location
