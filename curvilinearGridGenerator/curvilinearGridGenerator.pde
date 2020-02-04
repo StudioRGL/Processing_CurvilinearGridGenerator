@@ -181,14 +181,14 @@ void draw() {
   if (saving == true)
   {
     if (control_saveMode.getValue()==2){
-        println("saving png");
+        println("Saving PNG");
         save(exportLocation);
       }
     else{
       endRecord();
     }
     saving = false;
-    print ("Save completed!");
+    println("Save completed!");
   }
 
   translate(-width/2, -height/2); // put it back, or we're gonna lose the GUI!
