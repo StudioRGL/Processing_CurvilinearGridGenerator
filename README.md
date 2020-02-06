@@ -8,7 +8,7 @@ https://twitter.com/realgoodliars
 https://www.instagram.com/realgoodliars
 
 ## Installation
- 1) Grab the appropriate .zip here: https://github.com/StudioRGL/Processing_CurvilinearGridGenerator/releases
+ 1) Grab the appropriate .zip from "assets" here: https://github.com/StudioRGL/Processing_CurvilinearGridGenerator/releases
  2) Unzip it
  3) If you're on a platform other than Windows-64 or MacOS you may need to install Java as well
  4) Run it!
